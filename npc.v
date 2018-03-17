@@ -21,6 +21,10 @@ reg muxsrc1;
 reg muxsrc2;
 reg muxsrc4;
 reg[2:0] muxsel;
+
+reg uncondcnt;
+reg condsuscnt;
+reg condcnt;
 always@(op or funct)
 begin
     if((op==6'h0)&&(funct==6'h08))
@@ -58,14 +62,38 @@ begin
 end
 always@(pc or label)
 begin
-    muxsrc4<={14'b{(label[17:0]&(18'h0ffff))[16:0],2'b00}[17],{(label[17:0]&(18'h0ffff))[16:0],2'b00}}+pc+32'h4;
+    muxsrc4<={14'b{(label[17:0]&&(18'h0ffff))[16:0],2'b00}[17],{(label[17:0]&(18'h0ffff))[16:0],2'b00}}+pc+32'h4;
 end
 MUX8 MUX8_ins(muxsel,muxsrc03567,muxsrc1,muxsrc2,muxsrc03567,muxsrc4,muxsrc03567,muxsrc03567,muxsrc03567,newpc,0);
 always@(*)
 begin
     pcclear<=(newpc!=pc+4);
 end
-
+always@(op or funct or muxsel1 or pcen)
+begin
+    if((((op==0)&&(funct==6'h08))||muxsel1)&&(pcen))
+        uncondcnt=1;
+    else
+        uncondcnt=0;
+end
+always@(pcen or muxsel2)
+begin
+    if((pcen)&&(muxsel2))
+        condsuscnt=1;
+    else
+        condcnt=0;
+end
+always@(aluout or pcen)
+begin
+    if(((aluout==6'h04)||(aluout==6'h05))&&pcen)
+        condcnt=1;
+    else
+        condcnt=0;
+end
+module counter #(parameter SIZE=16)(clk,clear,count,outval);
+counter counter_ins_uncondsum(clk,0,uncondcnt,uncondsum);
+counter counter_ins_condsussum(clk,0,condsuscnt,condsuccsum);
+counter counter_ins_condsum(clk,0,condcnt,condsum);
 
 
 
