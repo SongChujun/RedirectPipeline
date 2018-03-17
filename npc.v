@@ -1,5 +1,5 @@
 `timescale 1ns / 1ns
-module controller(op,pc,aluout,label,rfd1,funct,clk,pcen,newpc,pcclear,uncondsum,condsuccsum,condsum);
+module npc(op,pc,aluout,label,rfd1,funct,clk,pcen,newpc,pcclear,uncondsum,condsuccsum,condsum);
 input[5:0] op;
 input[31:0] pc;
 input[31:0] aluout;
@@ -59,6 +59,11 @@ end
 always@(pc or label)
 begin
     muxsrc4<={14'b{(label[17:0]&(18'h0ffff))[16:0],2'b00}[17],{(label[17:0]&(18'h0ffff))[16:0],2'b00}}+pc+32'h4;
+end
+MUX8 MUX8_ins(muxsel,muxsrc03567,muxsrc1,muxsrc2,muxsrc03567,muxsrc4,muxsrc03567,muxsrc03567,muxsrc03567,newpc,0);
+always@(*)
+begin
+    pcclear<=(newpc!=pc+4);
 end
 
 
