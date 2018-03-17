@@ -15,31 +15,32 @@ module controllertb;
     wire[15:0] condsum; 
   initial
    begin
-   
-   pc<=$random;
+   pcen<=1;
+   pc<=0;
    aluout<=$random;
    label<=$random;
    rfd1<=$random;
    clk<=0; 
    op<=$random;
-   funct<=random;
-   #10
+   funct<=$random;
+   #100
+   pc<=$random;
    op<=6'b0;
-   funct<=6'b08;
-   #10
+   funct<=6'h08;
+   #100
    op<=6'h2;
-   #10
-   op>=6'h3;
-   #10
+   #100
+   op<=6'h3;
+   #100
     aluout<=0;
     op<=6'h4;
-    #10
+    #100
     aluout<=2;
     op<=5; 
-    #10
+    #100
     aluout<=1;
     op<=6'h01;
    end
-    always #10 clk <= ~clk;
+    always #100 clk <= ~clk;
     npc npc_ins(op,pc,aluout,label,rfd1,funct,clk,pcen,newpc,pcclear,uncondsum,condsuccsum,condsum);
 endmodule
