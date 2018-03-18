@@ -5,7 +5,8 @@
 //module DM(ra, rb, D,load,str,sel, clr, clk,A_out , B_out);
 // module RF(rA, rB, rW, WE, w, clk,A, B);
 // module ext(data,op,funct,extdata);
-module data_toute(clk1,ram_addr,rst,frequency,rst,display,AN,SEG);
+module data_toute(PCenclr,clk1,ram_addr,rst,frequency,rst,display,AN,SEG);
+input PCenclr;
 input clk1; // 时钟
 input [5:0] ram_addr; // 内存地址
 input rst; // 总控制开关
@@ -36,7 +37,7 @@ clk1,
 AN,
 SEG);
 
-reg clk_sys;
+reg clk_sys=0;
 wire[31:0] #npc;
 wire PCclear;
 wire[15:0] undondsum;
@@ -44,8 +45,8 @@ wire[15:0] condsum;
 wire[15:0] condsussum;
 wire[31:0] PCregout;
 wire[31:0] PCregin
-reg stall;
-reg PCen;
+wire stall;
+wire PCen;
 
 wire[31:0] IFIR;
 
@@ -88,9 +89,9 @@ wire[4:0] Exshamt;
 wire[4:0] Exrs;
 wire[4:0] Exrt;
 wire[4:0] Exrd;
-reg[31:0] alusrc1;
-reg[31:0] alusrc2;
-reg alusrc1muxsel;
+reg[31:0] alusrc1=0;
+reg[31:0] alusrc2=0;
+reg alusrc1muxsel=0;
 wire[31:0] memaluout;
 wire[31:0] wbout;
 wire[31:0] alusrc2tmp;
@@ -110,8 +111,8 @@ wire[4:0] Memrd;
 wire[4:0] Memrt;
 wire[4:0] Memrs;
 wire[4:0] Memshamt;
-reg[23:0] dmaddr;
-wire[31:0] Memdmout;//////////////////////////////////////////////////////////////////////////////////////////
+reg[31:0] dmaddr=0;
+wire[31:0] Memdmout;
 wire[1:0] MEMSEL;
 wire WBWE;
 wire[31:0] WBpc;
@@ -130,20 +131,22 @@ wire[4:0] WBrs;
 wire[4:0] WBrt;
 wire[15:0] WBimm;
 wire[31:0] WBrfdata;
-wire WBrfw3#;
 wire[31:0] PCenMUXdata;
 wire[15:0] PCencnt; 
-wire PCenclr;
+
 wire syscall_display_en;
 wire[31:0] syscall_display;
 wire ALUaeq,ALUbeq,MEMaeq,MEMbeq,rfd2alueq,rfd2dmeq,src1ex,src1mem;
 wire[15:0] cycle_counter;
 MUX2 #32 MUX2_pc(PCclear,PCregout+4,#npc,PCregin,0);
-regester #32 regester_pc(!(stall|PCen),clk_sys,PCregin,rst,PCregout);
+//module register#(parameter width=32)(ena,clk,data,clr,out);
+regester #32 regester_pc(!(stall||PCen),clk_sys,PCregin,rst,PCregout);
 IM IM_IR(PCregout[11:2],IFIR);
-IF_IF IF_ID_ins(PCregout,IDpc,IDIR,IFIR,clk_sys,PCclear);
+// module IF_ID(pc,nxt_pc,IR,nxt_IR,stall,clk,PCclear);
+IF_IF IF_ID_ins(PCregout,IDpc,IFIR,IDIR,!(stall||PCen),clk_sys,PCclear);
+// module controller(IR,ALUop,dmload,dmstr,dmsel,ra,rb,rt,rs,funct,op,imm);
 controller controller_ins(IDIR,IDALUop,IDdmload,IDdmstr,IDdmsel,IDrA,IDrB,IDrt,IDrs,IDfunct,IDop,IDinimm);
-//module DM(ra, rb, D,load,str,sel, clr, clk,A_out , B_out);
+// module ext(data,op,funct,extdata);
 ext ext_ins(IDinimm,IDop,IDfunct,IDimm);
 // module ID_EX(IR,alusela,aluselb,dmld,dmsel,dmstr,aluop,rfd2sel,rfd1sel,pc,rfd1,rfd2,immext,clk,stall,PCen
 // ,IR_nxt,alusela_nxt,aluselb_nxt,dmld_nxt,dmsel_nxt,dmstr_nxt,aluop_nxt,rfd2sel_nxt,rfd1sel_nxt,pc_nxt,rfd1_nxt,rfd2_nxt,immext_nxt);
@@ -153,7 +156,7 @@ ExIR,Exalusela,Exaluselb,Exdmld,Exdmsel,Exdmstr,ExALUop,Exrfd2sel,Exrfd1sel,Expc
 parser parser_Ex(ExIR,Exop,Exrs,Exrt,Exrd,Exshamt,Exfunct);
 assign Exlabel={Exrs,Exrt,Exrd,Exshamt,Exfunct};
 // module npc(op,pc,aluout,label,rfd1,funct,clk,pcen,newpc,pcclear,uncondsum,condsussum,condsum);
-npc npc_ins(Exop,Expc,ExALUout,Exlabel,Exrfd1,Exfunct,clk_sys,!Pcen,#npc,pcclear,uncondsum,condsussum,condsum);
+npc npc_ins(Exop,Expc,ExALUout,Exlabel,Exrfd1,Exfunct,clk_sys,!Pcen,#npc,PCclear,uncondsum,condsussum,condsum);
 always@(Exop or Exfunct)
 begin
     if((Exop==0)&&((Exfunct==0)||(Exfunct==6'h2)||(Exfunct==6'h3)||(Exfunct==6'h6)))
@@ -177,10 +180,10 @@ begin
 end
 // module ALUsrcB(op,funct,ALUsrcB);
 ALUsrcB ALUsrcB_ins(EXop,Exfunct,aluSrcB);
-always@(aluSrcB or EXop or Exfunct) 
+always@(*) 
 begin
     if((Exop==0)&&(Exfunct==6'h06))
-        alusrc2tmp=Exrfd2;
+        alusrc2tmp=Exrfd1;
     else
     begin
         if(aluSrcB)
@@ -207,10 +210,10 @@ ALU ALU_ins(alusrc1,alusrc2,ExALUop,ExALUout,aluR2,aluof,aluuof,alueq);
 MUX4 MUX4_exrfd2(Exrfd2sel,Exrfd2,memaluout,wbout,0,Exrfd2ToMem,0);
 // module EX_MEM(dmld,dmsel,dmstr,aluout,rfd1,rfd2,pc,IR,clk,rst,dmld_nxt,dmsel_nxt,dmstr_nxt,aluout_nxt,rfd1_nxt,rfd2_nxt
 // ,pc_nxt,IR_nxt);
-EX_MEM EX_MEM_ins(Exdmld,Exdmsel.Exdmstr,ExALUout,Exrfd1,Exrfd2ToMem,Expc,ExIR,clk_sys,rst,Memdmld,Memdmsel,Memdmstr,memaluout,
+EX_MEM EX_MEM_ins(Exdmld,Exdmsel,Exdmstr,ExALUout,Exrfd1,Exrfd2ToMem,Expc,ExIR,clk_sys,rst,Memdmld,Memdmsel,Memdmstr,memaluout,
 Memrfd1,Memrfd2,Mempc,MemIR);
 // module parser(IR,op,rs,rt,rd,shamt,funct);
-parser parsel_Mem(MemIR,Memop,Memfunct,Memrs,Memrt,Memrd,Memshamt,Memfunct);
+parser parsel_Mem(MemIR,Memop,Memrs,Memrt,Memrd,Memshamt,Memfunct);
 always@(*)
 begin
     if(Memop==6'h24)
@@ -223,29 +226,28 @@ DM DM_ins(dmaddr[5:0],ram_addr,Memrfd2,Memdmld,Memdmstr,Memdmsel,rst,clk_sys,Mem
 assign MEMSEL=memaluout[1:0];
 // module ConflictJudge(IDop,IDfunct,IDrs,IDrt,EXop,Exfunct,EXrd,EXrt,MEMop,MEMfunct,MEMrd,MEMrt,stall,
 // ALUaeq,ALUbeq,MEMaeq,MEMbeq,rfd2alueq,rfd2dmeq,src1ex,src1mem);
-ConflictJudge ConflictJudge_ins(IDop,IDfunct,IDrs,IDrt,Exop,Exfunct,Exrd,MEMop,Memfunct,Memrd,MEMrt,stall
+ConflictJudge ConflictJudge_ins(IDop,IDfunct,IDrs,IDrt,Exop,Exfunct,Exrd,Exrt,MEMop,Memfunct,Memrd,MEMrt,stall
 ,ALUaeq,ALUbeq,MEMaeq,MEMbeq,rfd2alueq,rfd2dmeq,src1ex,src1mem);
 // module alusrcsel(idsrc1mem,idsrc1ex,memaeq,aluaeq,membeq,alubeq,rfd2dmbeq,rfd2alueq,sela,selb,rfd1sel,rdf2sel);
 alusrcsel alusrcsel_ins(src1mem,src1ex,memaeq,aluaeq,membeq,alubeq,rfd2dmbeq,rfd2alueq,IDALUsela,IDALUselb,IDrfd1sel,IDrfd2sel);
-// module MEM_WB(pc,dmdout,aluout,IR,SEL,rfd1,rfd2,clk,rst,pc_nxt,dmdout_nxt,aluout_nxt,IR_nxt,SEL_nxt,rfd1_nxt,rfd2_nxt);
 // module MEM_WB(pc,dmdout,aluout,IR,SEL,rfd1,rfd2,clk,rst
 // ,pc_nxt,dmdout_nxt,aluout_nxt,IR_nxt,SEL_nxt,rfd1_nxt,rfd2_nxt);
-EX_MEM EX_MEM_ins(Mempc,Memdmout,memaluout,MemIR,MEMSEL,Memrfd1,Memrfd2,clk_sys,rst,WBpc,WBdmout,WBaluout,WBIR,WBSEL,WBrfd1,WBrfd2);
+MEM_WB MEM_WB_ins(Mempc,Memdmout,memaluout,MemIR,MEMSEL,Memrfd1,Memrfd2,clk_sys,rst,WBpc,WBdmout,WBaluout,WBIR,WBSEL,WBrfd1,WBrfd2);
 // module parser(IR,op,rs,rt,rd,shamt,funct);
-parser parser_wb(MemIR,Memop,Memrs,Memrt,Memrd,Memshamt,Memfunct);
+parser parser_wb(WBIR,WBop,WBrs,WBrt,WBrd,WBshamt,WBfunct);
 assign WBimm={WBrd,WBshamt,WBfunct};
 // module RFdin(op,sel,dmdout,aluout,pc,imm,data)
 RFdin RFdin_ins(WBop,WBSEL,WBdmout,WBaluout,WBpc,WBimm,WBrfdata);
 // module RFw#(op,funct,w#);
-RFw# RFw#_ins(WBop,WBfunct,WBWE);
+RFwe RFwe_ins(WBop,WBfunct,WBWE);
 always@(*)
 begin
-    if(MEMop==6'H03)
+    if(WBop==6'H03)
         WBrw=5'h1f;
-    else if(MEMop==0)
-        WBrw=MEMrd;
+    else if(WBop==0)
+        WBrw=WBrd;
     else
-        WBrw=MEMrt;
+        WBrw=WBrt;
 end
 // module RF(rA, rB, rW, WE, w, clk,A, B);
 RF RF_ins(IDrA,IDrB,WBrw,WBWE,WBrfdata,clk_sys,IDrfd1,IDrfd2);
@@ -259,9 +261,9 @@ begin
 end
 // module counter #(parameter SIZE=16)(clk,clear,count,outval);
 counter #16 counter_PCen(clk_sys,PCenclr,PCencnt,PCen);
-assign syscall_display_en=( (IDop==0)&&(IDfunct==6'h0c)&&(PCenMUXdata!=32'h00000032));
-// regester #32 regester_pc(!(stall|PCen),clk_sys,PCregin,rst,PCregout);
+assign syscall_display_en=((IDop==0)&&(IDfunct==6'h0c)&&(PCenMUXdata!=32'h00000032));
+// module register#(parameter width=32)(ena,clk,data,clr,out);
 regester #32 regester_PCen(syscall_display_en,clk_sys,IDrfd2,rst,syscall_display);
-module counter #(parameter SIZE=16)(clk_sys,clear,count,outval);
+// module counter #(parameter SIZE=16)(clk_sys,clear,count,outval);
 counter #16 counter_cyclecnt(clk_sys,rst,!PCen,cycle_counter);
-
+endmodule

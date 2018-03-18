@@ -1,9 +1,9 @@
 `timescale 1ns / 1ns
-module Mux_8#(parameter width = 32)(addr,in0,in1,in2,in3,in4,in5,in6,in7,out,enable);
+module MUX8#(parameter width = 32)(addr,in0,in1,in2,in3,in4,in5,in6,in7,out,enable);
 input[2:0] addr;
 input[width - 1:0] in0,in1,in2,in3,in4,in5,in6,in7;
 input enable;
-output reg[width - 1:0] out;
+output reg[width - 1:0] out=0;
 
 always@(addr or in0 or in1 or in2 or in3 or in4 or in5 or in6 or in7 or enable )
 begin

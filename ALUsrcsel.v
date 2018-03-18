@@ -8,10 +8,10 @@ input aluaeq;
 input alubeq;
 input rfd2dmbeq;
 input rfd2alueq;
-output reg[1:0] sela;
-output reg[1:0] selb;
-output reg[1:0] rfd1sel;
-output reg[1:0] rdf2sel;
+output reg[1:0] sela=0;
+output reg[1:0] selb=0;
+output reg[1:0] rfd1sel=0;
+output reg[1:0] rdf2sel=0;
 always@(*)
 begin
     if({idsrc1mem,idsrc1ex}==2'b11)

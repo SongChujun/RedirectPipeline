@@ -4,16 +4,16 @@ input[5:0] op;
 input[31:0] dmdout;
 input[31:0] aluout;
 input[31:0] pc;
-output reg data;
-reg alusel0;
-reg alusel1;
-reg alusel2;
-reg[2:0] alusel;
-reg[31:0] tmpdata;
-reg[31:0] alusrc1;
-reg[31:0] alusrc2;
-reg[31:0] alusrc4;
-reg[31:0] aluelse;
+output reg data=0;
+reg alusel0=0;
+reg alusel1=0;
+reg alusel2=0;
+reg[2:0] alusel=0;
+reg[31:0] tmpdata=0;
+reg[31:0] alusrc1=0;
+reg[31:0] alusrc2=0;
+reg[31:0] alusrc4=0;
+reg[31:0] aluelse=0;
 always@(op)
 begin
     if(op==6'h24)

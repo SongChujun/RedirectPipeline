@@ -14,42 +14,42 @@ input[5:0] MEMfunct;
 input[4:0] MEMrd;
 input[4:0] MEMrt;
 
-output reg stall;
-output reg ALUaeq;
-output reg ALUbeq;
-output reg MEMaeq;
-output reg MEMbeq;
-output reg rfd2alueq;
-output reg rfd2dmeq;
-output reg src1ex;
-output reg src1mem;
+output reg stall==0;
+output reg ALUaeq=0;
+output reg ALUbeq=0;
+output reg MEMaeq=0;
+output reg MEMbeq=0;
+output reg rfd2alueq=0;
+output reg rfd2dmeq=0;
+output reg src1ex=0;
+output reg src1mem=0;
 
-reg IDsrc1mux1sel;
-reg IDsrc1mux2sel;
-reg[4:0] IDsrc1;
-reg IDsrc2mux1sel;
-reg IDsrc2mux2sel;
-reg[4:0] IDsrc2;
+reg IDsrc1mux1sel=0;
+reg IDsrc1mux2sel=0;
+reg[4:0] IDsrc1=0;
+reg IDsrc2mux1sel=0;
+reg IDsrc2mux2sel=0;
+reg[4:0] IDsrc2=0;
 
-reg[4:0] Exdt;
-reg[1:0] Exdtmux1sel;
-reg Exdtmux2sel;
-reg Exdtmux3sel;
+reg[4:0] Exdt=0;
+reg[1:0] Exdtmux1sel=0;
+reg Exdtmux2sel=0;
+reg Exdtmux3sel=0;
 
-reg[4:0] MEMdt;
-reg[1:0] MEMdtmux1sel;
-reg MEMdtmux2sel;
-reg MEMdtmux3sel;
+reg[4:0] MEMdt=0;
+reg[1:0] MEMdtmux1sel=0;
+reg MEMdtmux2sel=0;
+reg MEMdtmux3sel=0;
 
-reg[4:0] ALUA;
-reg ALUAmux1sel;
-reg ALUAmux2sel;
+reg[4:0] ALUA=0;
+reg ALUAmux1sel=0;
+reg ALUAmux2sel=0;
 
-reg[4:0] ALUB;
-reg ALUBmuxsel;
+reg[4:0] ALUB=0;
+reg ALUBmuxsel=0;
 
-reg[4:0] lwdt;
-reg lwdtalusel;
+reg[4:0] lwdt=0;
+reg lwdtalusel=0;
 always@(IDop or IDfunct)
 begin
     if((IDop==0)&&(IDfunct==6'h0c))
@@ -62,11 +62,7 @@ begin
         IDsrc1mux1sel=0;
         IDsrc2mux1sel=0;
     end
-    if(((IDop==6'h2)||(IDop==6'h3))||((IDop==6'h0)&&((IDfunct==6'h0)||(IDfunct==6'h2)||(IDfunct==6'h3))))
-        IDsrc1mux2sel=1;
-    else
-        IDsrc1mux2sel=0;//
-    if(((IDop==0)&&((IDfunct==6'h08)))||((IDop==6'h8)||(IDop==6'h9)||(IDop==6'hc)||(IDop==6'hd)||(IDop==6'h23)||
+    if(((IDop==0)&&((IDfunct==6'h08)))||((IDop==6'h9)||(IDop==6'hc)||(IDop==6'hd)||(IDop==6'h23)||
     (IDop==6'ha)||(IDop==6'h2)||(IDop==6'h3)||(IDop==6'he)||(IDop==6'h24)||(IDop==6'h01)))
         IDsrc2mux2sel=1;
     else
@@ -79,34 +75,31 @@ begin
         ALUAmux2sel=1;
     else
         ALUAmux2sel=0;
-    if(((IDop==0)&&((IDfunct==6'h20)||(IDfunct==6'h21)||(IDfunct==6'h24)||(IDfunct==6'h22)||(IDfunct==6'h25)
-    ||(IDfunct==6'h27)||(IDfunct==6'h2a)||(IDfunct==6'h2b)))||((IDop==6'h04)||(IDop==6'h05)))
+    if((IDop==0)&&((IDfunct==6'h20)||(IDfunct==6'h21)||(IDfunct==6'h24)||(IDfunct==6'h22)||(IDfunct==6'h25)
+    ||(IDfunct==6'h27)||(IDfunct==6'h2a)||(IDfunct==6'h2b))||((IDop==6'h04)||(IDop==6'h05)))
         ALUBmuxsel=1;
     else
         ALUBmuxsel=0;
-end
-always@(*)
-begin
     if((EXop==6'h23)||(EXop==6'h24))
         lwdtalusel=1;
     else
         lwdtalusel=0;
+        
 end
-
 always@(*)
 begin
-    if((IDsrc1mux1sel==1)&&((IDsrc1mux2sel==0)))
+    if((IDsrc1mux1sel==1)||((IDsrc1mux2sel==0)))
         IDsrc1=6'h02;
-    else if((IDsrc1mux1sel==0)&&((IDsrc1mux2sel==0)))
+    else if((IDsrc1mux1sel==0)||((IDsrc1mux2sel==0)))
         IDsrc1=IDrs;
     else
         IDsrc1=0;
 end
 always@(*)
 begin
-    if((IDsrc2mux1sel==1)&&((IDsrc2mux2sel==0)))
+    if((IDsrc2mux1sel==1)||((IDsrc2mux2sel==0)))
         IDsrc2=6'h04;
-    else if((IDsrc2mux1sel==0)&&((IDsrc2mux2sel==0)))
+    else if((IDsrc1mux1sel==0)||((IDsrc1mux2sel==0)))
         IDsrc2=IDrt;
     else
         IDsrc2=0;
@@ -147,7 +140,7 @@ begin
     (MEMop==6'h0a)||(MEMop==6'h0e)),(MEMop==0)&&((MEMfunct==6'h20)||(MEMfunct==6'h21)||(MEMfunct==6'h24)||(MEMfunct==6'h0)||
     (MEMfunct==6'h02)||(MEMfunct==6'h03)||(MEMfunct==6'h22)||(MEMfunct==6'h25)||(MEMfunct==6'h27 )||(MEMfunct==6'h2a)||
     (MEMfunct==6'h2b))};
-    MEMdtmux2sel=(((MEMop==0)&&((MEMfunct==6'h08)||(MEMfunct==6'h0c)||(MEMfunct==6'h06)))||((MEMop==6'h1)||(MEMop==6'h2)||(MEMop==6'h4)||
+    MEMdtmux2sel=(((MEMop==0)&&((MEMfunct==6'h08)||(MEMfunct==6'h0c)))||((MEMop==6'h1)||(MEMop==6'h2)||(MEMop==6'h4)||
     (MEMop==6'h5)||(MEMop==6'h2b)));
     if(MEMop==6'h03)
         MEMdtmux3sel=1;
@@ -213,9 +206,9 @@ end
 always@(*)
 begin
     if((ALUB!=0)&&(ALUB==Exdt))
-        ALUbeq=1;
+        ALUB=1;
     else
-        ALUbeq=0;
+        ALUB=0;
 end
 always@(*)
 begin

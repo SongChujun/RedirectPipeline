@@ -1,20 +1,20 @@
 `timescale 1ns / 1ns
 module controller(IR,ALUop,dmload,dmstr,dmsel,ra,rb,rt,rs,funct,op,imm);
 input[31:0] IR;
-output reg[3:0] ALUop;
-output reg dmload;
-output reg dmstr;
-output reg dmsel;
-output reg[4:0] ra;
-output reg[4:0] rb;
-output reg[4:0] rt;
-output reg[4:0] rs;
-output reg[5:0] funct;
-output reg[5:0] op;
-output reg[15:0] imm;
-reg[3:0] alumuxsrc0;
-reg[3:0] alumuxsrc1;
-reg alumuxsel;
+output reg[3:0] ALUop=0;
+output reg dmload=0;
+output reg dmstr=0;
+output reg dmsel=0;
+output reg[4:0] ra=0;
+output reg[4:0] rb=0;
+output reg[4:0] rt=0;
+output reg[4:0] rs=0;
+output reg[5:0] funct=0;
+output reg[5:0] op=0;
+output reg[15:0] imm=0;
+reg[3:0] alumuxsrc0=0;
+reg[3:0] alumuxsrc1=0;
+reg alumuxsel=0;
 always@(op)
 begin
   if((op==6'b100011)||(op==6'b100100))

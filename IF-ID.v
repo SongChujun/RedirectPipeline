@@ -16,6 +16,6 @@ begin
     else
         reg_clr=0;
 end
-register #32 register_pc(!stall,clk,pc,reg_clr,nxt_pc);
-register #32 register_IR(!stall,clk,IR,reg_clr,nxt_IR);
+register #32 register_pc(stall,clk,pc,reg_clr,nxt_pc);
+register #32 register_IR(stall,clk,IR,reg_clr,nxt_IR);
 endmodule

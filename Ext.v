@@ -4,13 +4,13 @@ input data;
 input op;
 input funct;
 output reg[31:0] extdata;
-reg[31:0] data1;
-reg[31:0] data2;
-reg[31:0] data4;
-reg bit0;
-reg bit1;
-reg bit2;
-reg[31:0] middleres;
+reg[31:0] data1=0;
+reg[31:0] data2=0;
+reg[31:0] data4=0;
+reg bit0=0;
+reg bit1=0;
+reg bit2=0;
+reg[31:0] middleres=0;
 always@(*)
 begin
     data1={{16{data[15]}}, data};

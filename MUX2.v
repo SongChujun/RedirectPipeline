@@ -4,7 +4,7 @@ module Mux_2#(parameter width = 32)(addr,in0,in1,out,enable);
 input addr;
 input[width-1:0] in0,in1;
 input enable;
-output reg[width-1:0] out;
+output reg[width-1:0] out=0;
 
 always@(addr or in0 or in1 or enable )
 begin

@@ -1,7 +1,7 @@
-module RFw#(op,funct,w#);
+module RFwe(op,funct,w#);
 input[5:0] op;
 input[5:0] funct;
-output reg W#;
+output reg W#=0;
 always@(*)
 begin
     if(((op==0)&&((funct==6'h08)||(funct==6'h0c)))

@@ -13,20 +13,20 @@ output reg pcclear;
 output[15:0] uncondsum;
 output[15:0] condsuccsum;
 output[15:0] condsum;
-reg muxsel0;
-reg muxsel1;
-reg muxsel2;
+reg muxsel0=0;
+reg muxsel1=0;
+reg muxsel2=0;
 reg[31:0] muxsrc03567=0;
-reg[31:0] muxsrc1;
-reg[31:0] muxsrc2;
-reg[31:0] muxsrc4;
-reg[2:0] muxsel;
+reg[31:0] muxsrc1=0;
+reg[31:0] muxsrc2=0;
+reg[31:0] muxsrc4=0;
+reg[2:0] muxsel=0;
 
-reg uncondcnt;
-reg condsuscnt;
-reg condcnt;
-reg[17:0] tmp;
-reg[17:0] tmp1;
+reg uncondcnt=0;
+reg condsuscnt=0;
+reg condcnt=0;
+reg[17:0] tmp=0;
+reg[17:0] tmp1=0;
 always@(op or funct)
 begin
     if((op==6'h0)&&(funct==6'h08))
