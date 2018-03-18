@@ -1,4 +1,4 @@
-module Registers(
+module RF(
 	rA, rB, rW, WE, w, clk,
 	A, B
     );
@@ -24,7 +24,7 @@ module Registers(
 		for (i = 0; i < 32; i=i+1) data[i] = 'h00000000;
 	end
 
-	always @(posedge clk) begin
+	always @(negedge clk) begin
 		if (WE) begin
 			data[rW] = w;
 		end

@@ -1,5 +1,5 @@
 `timescale 1ns / 1ns
-module controller(IR,op,rs,rt,rs,shamt,funct);
+module parsel(IR,op,rs,rt,rd,shamt,funct);
 input[31:0] IR;
 output reg[5:0] op;
 output reg[4:0] rs;

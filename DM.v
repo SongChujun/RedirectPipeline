@@ -5,7 +5,8 @@ module DM(
 	input [5:0] ra, rb;	// ra is read-write but rb is read-only (for display)
 	input [31:0] D;			// D will be wrote at address 'ra'
 	input WE, clr, clk,load,str,sel;
-	output reg [31:0] A_out, B_out;
+	output reg [31:0] A_out
+    wire[31:0] B_out;
 
 	reg [31:0] data [0:63];	// 64x31 data
 
@@ -34,8 +35,8 @@ module DM(
         if((load)&&(sel))
         begin
             A_out <= data[ra];
-            B_out <= data[rb];
         end
     end
+    assign B_out=data[rb];
 
 endmodule
