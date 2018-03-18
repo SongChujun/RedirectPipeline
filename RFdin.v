@@ -40,8 +40,7 @@ begin
     alusrc4=pc+4;
     aluelse=aluout;
 end
-module Mux_8#(parameter width = 32)(addr,in0,in1,in2,in3,in4,in5,in6,in7,out,enable);
-MUX8 #32 MUX8_tmpdata(alusel,aluelse,alusrc1,alusrc2,aluelse,alusrc4,aluelse,aluelse,aluelse);
+MUX8 #32 MUX8_tmpdata(alusel,aluelse,alusrc1,alusrc2,aluelse,alusrc4,aluelse,aluelse,aluelse,tmpdata,0);
 always@(tmpdata or op or imm)
 begin
     if(op==5'h1f)

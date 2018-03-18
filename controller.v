@@ -15,21 +15,21 @@ output reg[15:0] imm;
 reg[3:0] alumuxsrc0;
 reg[3:0] alumuxsrc1;
 reg alumuxsel;
-always@(IR)
+always@(op)
 begin
   if((op==6'b100011)||(op==6'b100100))
     dmload<=1;
   else
     dmload<=0;
 end
-always@(IR)
+always@(op)
 begin
   if((op==6'b100011)||(op==6'b100100)||(op==6'b101011))
     dmsel<=1;
   else
     dmsel<=0;
 end
-always@(IR)
+always@(op)
 begin
   if(op==6'b101011)
     dmstr<=1;

@@ -62,7 +62,11 @@ begin
         IDsrc1mux1sel=0;
         IDsrc2mux1sel=0;
     end
-    if(((IDop==0)&&((IDfunct==6'h08)))||((IDop==6'h9)||(IDop==6'hc)||(IDop==6'hd)||(IDop==6'h23)||
+    if(((IDop==6'h2)||(IDop==6'h3))||((IDop==6'h0)&&((IDfunct==6'h0)||(IDfunct==6'h2)||(IDfunct==6'h3))))
+        IDsrc1mux2sel=1;
+    else
+        IDsrc1mux2sel=0;//
+    if(((IDop==0)&&((IDfunct==6'h08)))||((IDop==6'h8)||(IDop==6'h9)||(IDop==6'hc)||(IDop==6'hd)||(IDop==6'h23)||
     (IDop==6'ha)||(IDop==6'h2)||(IDop==6'h3)||(IDop==6'he)||(IDop==6'h24)||(IDop==6'h01)))
         IDsrc2mux2sel=1;
     else
@@ -75,31 +79,34 @@ begin
         ALUAmux2sel=1;
     else
         ALUAmux2sel=0;
-    if((IDop==0)&&((IDfunct==6'h20)||(IDfunct==6'h21)||(IDfunct==6'h24)||(IDfunct==6'h22)||(IDfunct==6'h25)
-    ||(IDfunct==6'h27)||(IDfunct==6'h2a)||(IDfunct==6'h2b))||((IDop==6'h04)||(IDop==6'h05)))
+    if(((IDop==0)&&((IDfunct==6'h20)||(IDfunct==6'h21)||(IDfunct==6'h24)||(IDfunct==6'h22)||(IDfunct==6'h25)
+    ||(IDfunct==6'h27)||(IDfunct==6'h2a)||(IDfunct==6'h2b)))||((IDop==6'h04)||(IDop==6'h05)))
         ALUBmuxsel=1;
     else
         ALUBmuxsel=0;
+end
+always@(*)
+begin
     if((EXop==6'h23)||(EXop==6'h24))
         lwdtalusel=1;
     else
         lwdtalusel=0;
-        
 end
+
 always@(*)
 begin
-    if((IDsrc1mux1sel==1)||((IDsrc1mux2sel==0)))
+    if((IDsrc1mux1sel==1)&&((IDsrc1mux2sel==0)))
         IDsrc1=6'h02;
-    else if((IDsrc1mux1sel==0)||((IDsrc1mux2sel==0)))
+    else if((IDsrc1mux1sel==0)&&((IDsrc1mux2sel==0)))
         IDsrc1=IDrs;
     else
         IDsrc1=0;
 end
 always@(*)
 begin
-    if((IDsrc2mux1sel==1)||((IDsrc2mux2sel==0)))
+    if((IDsrc2mux1sel==1)&&((IDsrc2mux2sel==0)))
         IDsrc2=6'h04;
-    else if((IDsrc1mux1sel==0)||((IDsrc1mux2sel==0)))
+    else if((IDsrc2mux1sel==0)&&((IDsrc2mux2sel==0)))
         IDsrc2=IDrt;
     else
         IDsrc2=0;
@@ -140,7 +147,7 @@ begin
     (MEMop==6'h0a)||(MEMop==6'h0e)),(MEMop==0)&&((MEMfunct==6'h20)||(MEMfunct==6'h21)||(MEMfunct==6'h24)||(MEMfunct==6'h0)||
     (MEMfunct==6'h02)||(MEMfunct==6'h03)||(MEMfunct==6'h22)||(MEMfunct==6'h25)||(MEMfunct==6'h27 )||(MEMfunct==6'h2a)||
     (MEMfunct==6'h2b))};
-    MEMdtmux2sel=(((MEMop==0)&&((MEMfunct==6'h08)||(MEMfunct==6'h0c)))||((MEMop==6'h1)||(MEMop==6'h2)||(MEMop==6'h4)||
+    MEMdtmux2sel=(((MEMop==0)&&((MEMfunct==6'h08)||(MEMfunct==6'h0c)||(MEMfunct==6'h06)))||((MEMop==6'h1)||(MEMop==6'h2)||(MEMop==6'h4)||
     (MEMop==6'h5)||(MEMop==6'h2b)));
     if(MEMop==6'h03)
         MEMdtmux3sel=1;
@@ -206,9 +213,9 @@ end
 always@(*)
 begin
     if((ALUB!=0)&&(ALUB==Exdt))
-        ALUB=1;
+        ALUbeq=1;
     else
-        ALUB=0;
+        ALUbeq=0;
 end
 always@(*)
 begin

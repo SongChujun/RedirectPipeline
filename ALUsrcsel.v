@@ -15,7 +15,7 @@ output reg[1:0] rdf2sel;
 always@(*)
 begin
     if({idsrc1mem,idsrc1ex}==2'b11)
-        rfd1sel=1;
+        rfd1sel=2'b01;
     else
         rfd1sel={idsrc1mem,idsrc1ex};
 end

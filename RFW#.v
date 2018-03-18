@@ -1,4 +1,4 @@
-module(op,funct,alusrcb)
+module(op,funct,alusrcb);
 input[5:0] op;
 input[5:0] funct;
 output reg alusrcb;
@@ -10,3 +10,4 @@ begin
     else
         alusrcb=1;
 end
+endmodule

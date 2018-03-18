@@ -9,12 +9,12 @@ output reg[4:0] shamt;
 output reg[5:0] funct;
 always@(*)
 begin
-    op<=IR[31:26];
-    rs<=IR[25:21];
-    rt<=IR[20:16];
-    rd<=IR[15:11];
-    shamt<=IR[10:6];
-    funct<=IR[5:0];
+    op=IR[31:26];
+    rs=IR[25:21];
+    rt=IR[20:16];
+    rd=IR[15:11];
+    shamt=IR[10:6];
+    funct=IR[5:0];
 end
 endmodule
 
