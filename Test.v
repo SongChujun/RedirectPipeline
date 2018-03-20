@@ -30,8 +30,8 @@ module test(
     wire frequency;
     wire [2:0] display;
     wire [7:0] SEG, AN;
-
-    data_route my_data_obj(clk1, ram_addr, rst, frequency, display, AN, SEG);
+// module data_route(PCenclr,clk1,ram_addr,frequency,rst,display,AN,SEG);
+    data_route my_data_obj(0,clk1, ram_addr,  frequency, rst,display, AN, SEG);
     assign clk1 = clk;
     assign ram_addr = 0;
     assign rst = 0;

@@ -1,5 +1,5 @@
 `timescale 1ns / 1ns
-module parsel(IR,op,rs,rt,rd,shamt,funct);
+module parser(IR,op,rs,rt,rd,shamt,funct);
 input[31:0] IR;
 output reg[5:0] op=0;
 output reg[4:0] rs=0;

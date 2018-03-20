@@ -6,16 +6,16 @@ output[31:0] nxt_IR;
 input stall;
 input clk;
 input PCclear;
-reg reg_clr;
 wire PCclearregout;
-register #1 register_pcclear(1,clk,PCclear,0,PCclearregout);
-always @(PCclearregout or PCclear)  
-begin
-    if((PCclearregout)&&(PCclear))
-        reg_clr=1;
-    else
-        reg_clr=0;
-end
-register #32 register_pc(stall,clk,pc,reg_clr,nxt_pc);
-register #32 register_IR(stall,clk,IR,reg_clr,nxt_IR);
+reg reg_clr=0;
+register #1 register_pcclear(1,!clk,PCclear,0,PCclearregout);
+// always @( negedge clk or PCclearregout or reg_clr)  
+// begin
+//     if(PCclearregout==1)
+//         reg_clr=0;
+//     else
+
+// end
+register #32 register_pc(stall,clk,pc,PCclearregout,nxt_pc);
+register #32 register_IR(stall,clk,IR,PCclearregout,nxt_IR);
 endmodule

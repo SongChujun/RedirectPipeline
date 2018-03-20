@@ -24,6 +24,6 @@ register #1 register_dmstr(1,clk,dmstr,rst,dmstr_nxt);
 register #32 register_aluout(1,clk,aluout,rst,aluout_nxt);
 register #32 register_rfd1(1,clk,rfd1,rst,rfd1_nxt);
 register #32 register_rfd2(1,clk,rfd2,rst,rfd2_nxt);
-register #32 register_pc(1,clk,pc,pc_nxt);
+register #32 register_pc(1,clk,pc,rst,pc_nxt);
 register #32 register_IR(1,clk,IR,rst,IR_nxt);
 endmodule

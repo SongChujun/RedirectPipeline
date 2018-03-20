@@ -32,25 +32,27 @@ output[31:0] rfd2_nxt;
 output[31:0] immext_nxt;
 reg reg_clr;
 wire stallregout;
+wire pcclearregout;
+// register #1 register_stall(1,!clk,pcclear,0,pcclearregout);
 register #1 register_stall(1,clk,stall,0,stallregout);
 always @(stallregout or stall)  
 begin
     if(stallregout&&stall)
-        reg_clr=1;
+        reg_clr=1;  
     else
         reg_clr=0;
 end
-register #32 register_IR(!PCen,clk,IR,reg_clr,IR_nxt);
-register #2 register_alusela(!PCen,clk,alusela,reg_clr,alusela_nxt);
-register #2 register_aluselb(!PCen,clk,aluselb,reg_clr,aluselb_nxt);
-register #1 register_dmld(!PCen,clk,dmld,reg_clr,dmld_nxt);
-register #1 register_dmsel(!PCen,clk,dmsel,reg_clr,dmsel_nxt);
-register #1 register_dmstr(!PCen,clk,dmstr,reg_clr,dmstr_nxt);
-register #4 register_aluop(!PCen,clk,aluop,reg_clr,aluop_nxt);
-register #2 register_rfd2sel(!PCen,clk,rfd2sel,reg_clr,rfd2sel_nxt);
-register #2 register_rfd1sel(!PCen,clk,rfd1sel,reg_clr,rfd1sel_nxt);
-register #32 register_pc(!PCen,clk,pc,reg_clr,pc_nxt);
-register #32 register_rfd1(!PCen,clk,rfd1,reg_clr,rfd1_nxt);
-register #32 register_rfd2(!PCen,clk,rfd2,reg_clr,rfd2_nxt);
-register #32 register_immext(!PCen,clk,immext,reg_clr,immext_nxt);
+register #32 register_IR(!PCen,clk,IR,stallregout&stall,IR_nxt);
+register #2 register_alusela(!PCen,clk,alusela,stallregout&stall,alusela_nxt);
+register #2 register_aluselb(!PCen,clk,aluselb,stallregout&stall,aluselb_nxt);
+register #1 register_dmld(!PCen,clk,dmld,stallregout&stall,dmld_nxt);
+register #1 register_dmsel(!PCen,clk,dmsel,stallregout&stall,dmsel_nxt);
+register #1 register_dmstr(!PCen,clk,dmstr,stallregout&stall,dmstr_nxt);
+register #4 register_aluop(!PCen,clk,aluop,stallregout&stall,aluop_nxt);
+register #2 register_rfd2sel(!PCen,clk,rfd2sel,stallregout&stall,rfd2sel_nxt);
+register #2 register_rfd1sel(!PCen,clk,rfd1sel,stallregout&stall,rfd1sel_nxt);
+register #32 register_pc(!PCen,clk,pc,stallregout&stall,pc_nxt);
+register #32 register_rfd1(!PCen,clk,rfd1,stallregout&stall,rfd1_nxt);
+register #32 register_rfd2(!PCen,clk,rfd2,stallregout&stall,rfd2_nxt);
+register #32 register_immext(!PCen,clk,immext,stallregout&stall,immext_nxt);
 endmodule

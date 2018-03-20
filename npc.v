@@ -27,30 +27,30 @@ reg condsuscnt=0;
 reg condcnt=0;
 reg[17:0] tmp=0;
 reg[17:0] tmp1=0;
-always@(op or funct)
+always@(*)
 begin
     if((op==6'h0)&&(funct==6'h08))
-        muxsel0<=1;
+        muxsel0=1;
     else
-        muxsel0<=0;
+        muxsel0=0;
 end
-always@(op)
+always@(*)
 begin
     if((op==6'h2)||(op==6'h3))
-        muxsel1<=1;
+        muxsel1=1;
     else
-        muxsel1<=0;
+        muxsel1=0;
 end
 always@(*)
 begin
-    if(((aluout==0)&&(op==6'h04))||((aluout!=0)&&(op==6'h05))||((aluout==32'b1)&&(op==6'h01)))
-        muxsel2<=1;
+    if(((aluout==0)&&(op==6'h04))||((aluout!=0)&&(op==6'h05))||((aluout==32'b1)&&(op==6'h01))   )
+        muxsel2=1;
     else
-        muxsel2<=0;
+        muxsel2=0;
 end
 always@(*)
 begin
-    muxsel<={muxsel2,muxsel1,muxsel0};
+    muxsel={muxsel2,muxsel1,muxsel0};
 end
 always@(*)
 begin
@@ -59,10 +59,10 @@ begin
 end
 always@(rfd1)
 begin
-    muxsrc1<=rfd1;
+    muxsrc1=rfd1;
 end
 
-always@(pc or label)
+always@(*)
 begin
     tmp=(label[17:0]&(18'h0ffff));
     tmp1={tmp[15:0],2'b00};
@@ -71,29 +71,30 @@ end
 MUX8  #32 MUX8_ins (muxsel,muxsrc03567,muxsrc1,muxsrc2,muxsrc03567,muxsrc4,muxsrc03567,muxsrc03567,muxsrc03567,newpc,0);
 always@(*)
 begin
-    pcclear<=(newpc!=pc+4);
+    pcclear=(newpc!=pc+4);
 end
-always@(op or funct or muxsel1 or pcen)
+always@(*)
 begin
     if((((op==0)&&(funct==6'h08))||muxsel1)&&(pcen))
         uncondcnt=1;
     else
         uncondcnt=0;
 end
-always@(pcen or muxsel2)
+always@(*)
 begin
     if((pcen==1'b1)&&(muxsel2==1'b1))
         condsuscnt=1;
     else
         condsuscnt=0;
 end
-always@(aluout or pcen)
+always@(*)
 begin
-    if(((aluout==6'h04)||(aluout==6'h05))&&(pcen==1'b1))
+    if(((op==6'h04)||(op==6'h05))&&(pcen==1'b1))
         condcnt=1;
     else
         condcnt=0;
 end
+// module counter #(parameter SIZE=16)(clk,clear,count,outval);
 counter counter_ins_uncondsum(clk,1'b0,uncondcnt,uncondsum);
 counter counter_ins_condsussum(clk,1'b0,condsuscnt,condsuccsum);
 counter counter_ins_condsum(clk,1'b0,condcnt,condsum);

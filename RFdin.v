@@ -1,15 +1,16 @@
-module RFdin(op,sel,dmdout,aluout,pc,imm,data)
+module RFdin(op,sel,dmdout,aluout,pc,imm,data);
 input[1:0] sel;
 input[5:0] op;
 input[31:0] dmdout;
 input[31:0] aluout;
 input[31:0] pc;
-output reg data=0;
+input[15:0] imm;
+output reg[31:0] data=0;
 reg alusel0=0;
 reg alusel1=0;
 reg alusel2=0;
 reg[2:0] alusel=0;
-reg[31:0] tmpdata=0;
+wire[31:0] tmpdata;
 reg[31:0] alusrc1=0;
 reg[31:0] alusrc2=0;
 reg[31:0] alusrc4=0;
@@ -41,9 +42,9 @@ begin
     aluelse=aluout;
 end
 MUX8 #32 MUX8_tmpdata(alusel,aluelse,alusrc1,alusrc2,aluelse,alusrc4,aluelse,aluelse,aluelse,tmpdata,0);
-always@(tmpdata or op or imm)
+always@(*)
 begin
-    if(op==5'h1f)
+    if(op==6'h0f)
         data={16'h0000,imm};
     else
         data=tmpdata;

@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module Mux_2#(parameter width = 32)(addr,in0,in1,out,enable);
+module MUX2 #(parameter width = 32)(addr,in0,in1,out,enable);
 input addr;
 input[width-1:0] in0,in1;
 input enable;

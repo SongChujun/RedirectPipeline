@@ -12,7 +12,7 @@ module IM(
 	initial begin
 		for (i=0;i<1024;i=i+1) data[i] = 'h00000000;
 	end
-    initial $readmemh("D:/hexdata/benchmark_ccmb.hex", data);
+    initial $readmemh("D:/BC.hex", data);
 	assign D_out = data[A];
 
 endmodule

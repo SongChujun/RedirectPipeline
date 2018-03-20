@@ -1,5 +1,5 @@
 `timescale 1ns / 1ns
-module alusrcsel(idsrc1mem,idsrc1ex,memaeq,aluaeq,membeq,alubeq,rfd2dmbeq,rfd2alueq,sela,selb,rfd1sel,rdf2sel);
+module alusrcsel(idsrc1mem,idsrc1ex,memaeq,aluaeq,membeq,alubeq,rfd2dmbeq,rfd2alueq,sela,selb,rfd1sel,rfd2sel);
 input idsrc1mem;
 input idsrc1ex;
 input memaeq;
@@ -11,7 +11,7 @@ input rfd2alueq;
 output reg[1:0] sela=0;
 output reg[1:0] selb=0;
 output reg[1:0] rfd1sel=0;
-output reg[1:0] rdf2sel=0;
+output reg[1:0] rfd2sel=0;
 always@(*)
 begin
     if({idsrc1mem,idsrc1ex}==2'b11)
