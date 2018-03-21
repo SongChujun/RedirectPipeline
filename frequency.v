@@ -2,7 +2,7 @@ module frequency_switch(primitive_clk, clk, clk_switch);
 input primitive_clk;
 input clk_switch;
 output reg clk = 0;
-parameter p1=5000000;
+parameter p1=50000;
 reg[32:0] counter_M=0;
 always @(posedge primitive_clk)  
 begin  

@@ -29,7 +29,32 @@ begin
         LRUtag[i]=0;
     end
 end
-always@(IFpc)
+// always@(IFpc)
+// begin
+//     for(i=0;((i<8)&&(addr[i]!=IFpc));i=i+1)
+//     begin
+//         k=i;
+//     end
+//     if(i==8)//can not find
+//     begin
+//         IFpcchoose=0;
+//         IFnpc=0;
+//     end
+//     else
+//     begin
+//         if((prehis[i])<2'b10)
+//         begin
+//             IFpcchoose=0;
+//             IFnpc=0;
+//         end
+//         else
+//         begin
+//             IFpcchoose=1;
+//             IFnpc=prepc[i];
+//         end
+//     end
+// end
+always@(negedge clk_sys)
 begin
     for(i=0;((i<8)&&(addr[i]!=IFpc));i=i+1)
     begin
@@ -53,9 +78,7 @@ begin
             IFnpc=prepc[i];
         end
     end
-end
-always@(negedge clk_sys)
-begin
+    largesttag=0;
     if((Expcchoose==0)&&(isjmp))//鏄烦杞絾鏄病棰勬祴
     begin
         for(i=0;((i<8)&&(addr[i]!=Expc));i=i+1)
@@ -116,23 +139,21 @@ begin
         // for(j=i+1;((j>0)&&(j<8));j=j+1)
         //     LRUtag[j]=LRUtag[j]+1;
         if(i!=0)
-            LRUtag[j]=LRUtag[j]+1;
+            LRUtag[0]=LRUtag[0]+1;
         if(i!=1)
-            LRUtag[j]=LRUtag[j]+1;
+            LRUtag[1]=LRUtag[1]+1;
         if(i!=2)
-            LRUtag[j]=LRUtag[j]+1;
+            LRUtag[2]=LRUtag[2]+1;
         if(i!=3)
-            LRUtag[j]=LRUtag[j]+1;
+            LRUtag[3]=LRUtag[3]+1;
         if(i!=4)
-            LRUtag[j]=LRUtag[j]+1;
+            LRUtag[4]=LRUtag[4]+1;
         if(i!=5)
-            LRUtag[j]=LRUtag[j]+1;
+            LRUtag[5]=LRUtag[5]+1;
         if(i!=6)
-            LRUtag[j]=LRUtag[j]+1;
+            LRUtag[6]=LRUtag[6]+1;
         if(i!=7)
-            LRUtag[j]=LRUtag[j]+1;
-        if(i!=8)
-            LRUtag[j]=LRUtag[j]+1;
+            LRUtag[7]=LRUtag[7]+1;
         pcclear=0;
     end
     else if((Expcchoose==0)&&(!isjmp))
