@@ -4,7 +4,7 @@ input clk;
 input clear;
 input count;
 output reg[SIZE-1:0] outval=0;
-always@(posedge clk or clear)
+always@(posedge clk or posedge clear)
 begin
     if(clear)
         outval<=0;

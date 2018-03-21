@@ -1,5 +1,6 @@
 module ID_EX(IR,alusela,aluselb,dmld,dmsel,dmstr,aluop,rfd2sel,rfd1sel,pc,rfd1,rfd2,immext,clk,stall,PCen
-,IR_nxt,alusela_nxt,aluselb_nxt,dmld_nxt,dmsel_nxt,dmstr_nxt,aluop_nxt,rfd2sel_nxt,rfd1sel_nxt,pc_nxt,rfd1_nxt,rfd2_nxt,immext_nxt);
+,IR_nxt,alusela_nxt,aluselb_nxt,dmld_nxt,dmsel_nxt,dmstr_nxt,aluop_nxt,rfd2sel_nxt,rfd1sel_nxt,pc_nxt,rfd1_nxt,rfd2_nxt,immext_nxt,
+pcchoose,pcchoose_nxt);
 input[31:0] IR;
 input[1:0] alusela;
 input[1:0] aluselb; 
@@ -16,6 +17,7 @@ input[31:0] immext;
 input clk;
 input stall;
 input PCen;
+input pcchoose;
 
 output[31:0] IR_nxt;
 output[1:0] alusela_nxt;
@@ -30,6 +32,7 @@ output[31:0] pc_nxt;
 output[31:0] rfd1_nxt;
 output[31:0] rfd2_nxt;
 output[31:0] immext_nxt;
+output pcchoose_nxt;
 reg reg_clr;
 wire stallregout;
 wire pcclearregout;
@@ -46,6 +49,7 @@ register #32 register_IR(!PCen,clk,IR,stallregout&stall,IR_nxt);
 register #2 register_alusela(!PCen,clk,alusela,stallregout&stall,alusela_nxt);
 register #2 register_aluselb(!PCen,clk,aluselb,stallregout&stall,aluselb_nxt);
 register #1 register_dmld(!PCen,clk,dmld,stallregout&stall,dmld_nxt);
+register #1 register_pcchoose(!PCen,clk,pcchoose,stallregout&stall,pcchoose_nxt);
 register #1 register_dmsel(!PCen,clk,dmsel,stallregout&stall,dmsel_nxt);
 register #1 register_dmstr(!PCen,clk,dmstr,stallregout&stall,dmstr_nxt);
 register #4 register_aluop(!PCen,clk,aluop,stallregout&stall,aluop_nxt);
